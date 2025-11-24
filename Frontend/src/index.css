@@ -1,11 +1,23 @@
+/**
+ * Global Styles
+ * 
+ * Base CSS reset and global styles for the Agentic Factory dashboard.
+ * Component-specific styles are handled inline via the theme system.
+ * 
+ * This file only contains:
+ * - CSS reset (box-sizing, margins)
+ * - Font smoothing for better text rendering
+ */
+
+/* Reset default browser styles */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Improve font rendering on macOS/iOS */
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-

@@ -1,6 +1,22 @@
+/**
+ * Sidebar Component
+ * 
+ * Fixed navigation sidebar for the Agentic Factory dashboard.
+ * Contains the logo, main navigation menu, and user profile section.
+ * 
+ * The sidebar uses a controlled pattern - the active state and navigation
+ * handler are passed in as props from the parent container.
+ * 
+ * @module components/layout/Sidebar
+ */
+
 import React from 'react';
 import { theme } from '../../utils/theme';
 
+/**
+ * Navigation menu items configuration
+ * Each item defines a route with icon, label, and ID
+ */
 const navItems = [
   { id: 'overview', label: 'Overview', icon: '◉' },
   { id: 'performance', label: 'Performance', icon: '⚡' },
@@ -9,6 +25,19 @@ const navItems = [
   { id: 'settings', label: 'Settings', icon: '◇' },
 ];
 
+/**
+ * Renders the main navigation sidebar
+ * 
+ * @param {Object} props - Component props
+ * @param {string} props.activeNav - Currently active navigation item ID
+ * @param {Function} props.onNavigate - Handler called when nav item is clicked
+ * 
+ * @example
+ * <Sidebar 
+ *   activeNav="overview" 
+ *   onNavigate={(id) => setActiveNav(id)} 
+ * />
+ */
 export const Sidebar = ({ activeNav, onNavigate }) => {
   return (
     <aside style={{
@@ -23,7 +52,9 @@ export const Sidebar = ({ activeNav, onNavigate }) => {
       left: 0,
       top: 0,
     }}>
-      {/* Logo */}
+      {/* ============================================
+          Logo Section
+          ============================================ */}
       <div style={{
         padding: '0 28px',
         marginBottom: '40px',
@@ -31,10 +62,11 @@ export const Sidebar = ({ activeNav, onNavigate }) => {
         alignItems: 'center',
         gap: '12px',
       }}>
+        {/* Logo Icon */}
         <div style={{
           width: '36px',
           height: '36px',
-          background: 'linear-gradient(135deg, #DC2626 0%, #B91C1C 100%)',
+          background: 'linear-gradient(135deg, #DC2626 0%, #B91C1C 100%)', // Rentokil red
           borderRadius: '10px',
           display: 'flex',
           alignItems: 'center',
@@ -45,6 +77,8 @@ export const Sidebar = ({ activeNav, onNavigate }) => {
         }}>
           A
         </div>
+        
+        {/* Logo Text */}
         <div>
           <div style={{
             fontSize: '17px',
@@ -65,7 +99,9 @@ export const Sidebar = ({ activeNav, onNavigate }) => {
         </div>
       </div>
 
-      {/* Navigation */}
+      {/* ============================================
+          Navigation Menu
+          ============================================ */}
       <nav style={{ flex: 1, padding: '0 16px' }}>
         {navItems.map((item) => (
           <button
@@ -79,6 +115,7 @@ export const Sidebar = ({ activeNav, onNavigate }) => {
               padding: '12px 16px',
               border: 'none',
               borderRadius: '10px',
+              // Active state styling
               background: activeNav === item.id ? 'rgba(220, 38, 38, 0.08)' : 'transparent',
               color: activeNav === item.id ? '#DC2626' : '#6e6e73',
               fontSize: '14px',
@@ -89,6 +126,7 @@ export const Sidebar = ({ activeNav, onNavigate }) => {
               textAlign: 'left',
               letterSpacing: '-0.01em',
             }}
+            // Hover effect for inactive items
             onMouseEnter={(e) => {
               if (activeNav !== item.id) {
                 e.currentTarget.style.background = 'rgba(0, 0, 0, 0.03)';
@@ -103,13 +141,17 @@ export const Sidebar = ({ activeNav, onNavigate }) => {
             <span style={{ 
               fontSize: '16px',
               opacity: activeNav === item.id ? 1 : 0.7,
-            }}>{item.icon}</span>
+            }}>
+              {item.icon}
+            </span>
             {item.label}
           </button>
         ))}
       </nav>
 
-      {/* User Section */}
+      {/* ============================================
+          User Profile Section
+          ============================================ */}
       <div style={{
         padding: '20px 24px',
         borderTop: `1px solid ${theme.colors.border}`,
@@ -117,6 +159,7 @@ export const Sidebar = ({ activeNav, onNavigate }) => {
         alignItems: 'center',
         gap: '12px',
       }}>
+        {/* User Avatar */}
         <div style={{
           width: '36px',
           height: '36px',
@@ -131,6 +174,8 @@ export const Sidebar = ({ activeNav, onNavigate }) => {
         }}>
           S
         </div>
+        
+        {/* User Info */}
         <div>
           <div style={{
             fontSize: '13px',
@@ -151,4 +196,3 @@ export const Sidebar = ({ activeNav, onNavigate }) => {
     </aside>
   );
 };
-
