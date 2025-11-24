@@ -197,6 +197,32 @@ The project includes a GitHub Actions workflow that automatically builds and dep
 You can also manually trigger the deployment:
 - Go to **Actions** → **Deploy to GitHub Pages** → **Run workflow**
 
+#### Troubleshooting
+
+**Error: "Get Pages site failed" or "HttpError: Not Found"**
+
+This means GitHub Pages isn't enabled yet. The workflow will try to enable it automatically, but if it still fails:
+
+1. **Manually Enable Pages:**
+   - Go to **Settings** → **Pages** in your repository
+   - Under **Source**, select **GitHub Actions** (not "Deploy from a branch")
+   - Save the settings
+
+2. **Check Repository Permissions:**
+   - Ensure you have admin access to the repository
+   - The workflow needs `pages: write` permission (already configured)
+
+3. **Re-run the Workflow:**
+   - After enabling Pages, go to **Actions** tab
+   - Click on the failed workflow run
+   - Click **Re-run all jobs**
+
+**Build Succeeds but Site Doesn't Load:**
+
+- Check the base path in `vite.config.js` matches your repository name
+- Verify the deployment URL in the Actions output
+- Check **Settings** → **Pages** for the published URL
+
 #### Workflow Details
 
 The CI/CD pipeline (`.github/workflows/deploy.yml`) performs:
