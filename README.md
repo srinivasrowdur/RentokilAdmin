@@ -1,8 +1,8 @@
 # Agentic Factory - Admin Console
 
-A production-ready React dashboard for monitoring AI agents across **Performance**, **Compliance**, and **Cost** metrics. Built with a scalable, modular architecture designed for real-time data integration.
+A production-ready React dashboard for monitoring AI agents across **Performance**, **Compliance**, and **Cost** metrics. Built with a scalable, modular architecture designed for real-time data integration with **Google Vertex AI Agent Engine**.
 
-![React](https://img.shields.io/badge/React-18.2.0-61DAFB?logo=react) ![Vite](https://img.shields.io/badge/Vite-5.0-646CFF?logo=vite) ![Recharts](https://img.shields.io/badge/Recharts-2.10-22C55E)
+![React](https://img.shields.io/badge/React-18.2.0-61DAFB?logo=react) ![Vite](https://img.shields.io/badge/Vite-5.0-646CFF?logo=vite) ![Recharts](https://img.shields.io/badge/Recharts-2.10-22C55E) ![Google Cloud](https://img.shields.io/badge/Google_Cloud-Ready-4285F4?logo=googlecloud)
 
 ---
 
@@ -23,59 +23,90 @@ A production-ready React dashboard for monitoring AI agents across **Performance
 - **Agent-level Breakdown** - Per-agent metrics across all categories
 - **Visual Indicators** - Colour-coded status (green/amber/red) with target thresholds
 - **Interactive Charts** - Area charts, gauges, and pie charts via Recharts
+- **Google Cloud Integration** - Designed to connect with Vertex AI Agent Engine
 
 ---
 
-## Architecture
-
-The codebase follows a **clean architecture** pattern optimised for scalability and maintainability.
+## Project Structure
 
 ```
-Frontend/src/
-├── AgentDashboard.jsx          # Main container (controller)
-├── App.jsx                     # React app entry
-├── main.jsx                    # Vite entry point
-├── index.css                   # Global styles
+RentokilAdmin/
+├── README.md
+├── .gitignore
 │
-├── components/
-│   ├── common/                 # Reusable UI components
-│   │   ├── MetricCard.jsx      # Stat display card
-│   │   ├── CategoryCard.jsx    # Category summary card
-│   │   ├── GaugeChart.jsx      # Semi-circular gauge
-│   │   └── ChartTooltip.jsx    # Custom Recharts tooltip
-│   │
-│   ├── layout/
-│   │   └── Sidebar.jsx         # Navigation sidebar
-│   │
-│   └── views/                  # Feature views (pages)
-│       ├── Overview.jsx        # Factory overview dashboard
-│       ├── Performance.jsx     # Performance metrics view
-│       ├── Compliance.jsx      # Compliance metrics view
-│       └── Costs.jsx           # Cost metrics view
+├── backend/                        # Backend integration planning
+│   └── plan.md                     # Google Agent Engine integration plan
 │
-├── hooks/
-│   └── useAgentData.js         # Data fetching hook (WebSocket-ready)
-│
-└── utils/
-    ├── theme.js                # Design tokens & colour system
-    └── mockData.js             # Simulated backend data
+└── Frontend/                       # React dashboard application
+    ├── package.json
+    ├── vite.config.js
+    ├── index.html
+    └── src/
+        ├── AgentDashboard.jsx      # Main container (controller)
+        ├── App.jsx                 # React app entry
+        ├── main.jsx                # Vite entry point
+        ├── index.css               # Global styles
+        │
+        ├── components/
+        │   ├── common/             # Reusable UI components
+        │   │   ├── MetricCard.jsx
+        │   │   ├── CategoryCard.jsx
+        │   │   ├── GaugeChart.jsx
+        │   │   └── ChartTooltip.jsx
+        │   │
+        │   ├── layout/
+        │   │   └── Sidebar.jsx
+        │   │
+        │   └── views/              # Feature views (pages)
+        │       ├── Overview.jsx
+        │       ├── Performance.jsx
+        │       ├── Compliance.jsx
+        │       └── Costs.jsx
+        │
+        ├── hooks/
+        │   └── useAgentData.js     # Data fetching hook (API-ready)
+        │
+        └── utils/
+            ├── theme.js            # Design tokens & colour system
+            └── mockData.js         # Simulated backend data
 ```
 
-### Design Principles
+---
 
-1. **Separation of Concerns**
-   - Logic in hooks (`useAgentData`)
-   - Presentation in components (`views/`, `common/`)
-   - Styling via centralised theme (`theme.js`)
+## Google Cloud Integration
 
-2. **Single Source of Truth**
-   - Data fetched once in container, passed down via props
-   - No prop drilling beyond one level
+The dashboard is designed to integrate with **Google Vertex AI Agent Engine** for monitoring production AI agents.
 
-3. **Scalability**
-   - Add new views by creating a file in `views/` and one switch case
-   - Add new agents by updating `mockData.js` (or API response)
-   - Real-time: swap `mockData` imports for WebSocket in `useAgentData.js`
+### Metrics Availability from Google Cloud
+
+| Metric Type | Google Cloud Source | Status |
+|-------------|---------------------|--------|
+| **Latency** | Cloud Monitoring API | ✅ Native |
+| **Error Rate** | Cloud Monitoring API | ✅ Native |
+| **Token Usage** | Vertex AI API Response | ✅ Native |
+| **Cost** | Cloud Billing API | ✅ Native |
+| **Tool Success** | Custom Logging | ⚠️ Custom |
+| **Escalation Rate** | Custom Logging | ⚠️ Custom |
+| **Compliance Metrics** | Custom + Responsible AI | ⚠️ Custom |
+
+### Required Google Cloud APIs
+
+```
+- Cloud Monitoring API (aiplatform.googleapis.com metrics)
+- Vertex AI API (token usage, model responses)
+- Cloud Billing API (cost tracking)
+- Cloud Logging API (custom events)
+- Agent Engine Sessions API (traces)
+```
+
+### Integration Plan
+
+See [`backend/plan.md`](./backend/plan.md) for the complete integration plan including:
+- Detailed metrics mapping
+- Python code examples
+- Architecture diagrams
+- Implementation roadmap
+- Required GCP permissions
 
 ---
 
@@ -86,6 +117,7 @@ Frontend/src/
 | **React 18** | UI framework with hooks |
 | **Vite 5** | Fast build tool & dev server |
 | **Recharts** | Data visualisation (charts) |
+| **Google Cloud** | Backend data source (planned) |
 
 ---
 
@@ -129,31 +161,79 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Performance Metrics
 
-| Metric | Definition |
-|--------|------------|
-| **Latency** | Time from request received to final response sent |
-| **Error Rate** | Share of requests that fail (exceptions, timeouts, invalid outputs) |
-| **Tool Call Success Rate** | Percentage of successful tool/API calls made by the agent |
-| **Escalation Rate** | Frequency with which the agent defers to a human |
-| **Output Accuracy** | Correctness of the agent's output vs. ground truth |
-| **Hallucination Rate** | Portion of outputs containing unverifiable or false claims |
+| Metric | Definition | Google Cloud Source |
+|--------|------------|---------------------|
+| **Latency** | Time from request received to final response sent | `aiplatform.googleapis.com/prediction/latencies` |
+| **Error Rate** | Share of requests that fail (exceptions, timeouts, invalid outputs) | `aiplatform.googleapis.com/prediction/error_count` |
+| **Tool Call Success Rate** | Percentage of successful tool/API calls made by the agent | Custom logging required |
+| **Escalation Rate** | Frequency with which the agent defers to a human | Custom logging required |
+| **Output Accuracy** | Correctness of the agent's output vs. ground truth | Vertex AI Evaluation |
+| **Hallucination Rate** | Portion of outputs containing unverifiable or false claims | Vertex AI Grounding |
 
 ### Compliance Metrics
 
-| Metric | Definition |
-|--------|------------|
-| **Privacy Compliance Rate** | Percentage of interactions where personal data is handled according to policy (e.g., GDPR) |
-| **Security Control Coverage** | Proportion of required security controls implemented and active |
-| **Bias Detection Rate** | Percentage of outputs flagged for bias or fairness issues |
-| **Explainability Coverage** | Share of outputs accompanied by interpretable reasoning or traceability |
+| Metric | Definition | Google Cloud Source |
+|--------|------------|---------------------|
+| **Privacy Compliance Rate** | Percentage of interactions where personal data is handled according to policy (e.g., GDPR) | Custom guardrails tracking |
+| **Security Control Coverage** | Proportion of required security controls implemented and active | Security Command Center |
+| **Bias Detection Rate** | Percentage of outputs flagged for bias or fairness issues | Vertex AI Responsible AI |
+| **Explainability Coverage** | Share of outputs accompanied by interpretable reasoning or traceability | Agent Engine Sessions |
 
 ### Cost Metrics
 
-| Metric | Definition |
-|--------|------------|
-| **Token Usage** | Total tokens consumed per interaction (prompt + completion) |
-| **Cost per Model** | Cost incurred per model used (e.g., Claude, GPT-4o, Gemini) |
-| **Total Cost** | Aggregate cost across all components (LLM, compute, storage, API calls) |
+| Metric | Definition | Google Cloud Source |
+|--------|------------|---------------------|
+| **Token Usage** | Total tokens consumed per interaction (prompt + completion) | `response.usage_metadata` |
+| **Cost per Model** | Cost incurred per model used (e.g., Claude, GPT-4o, Gemini) | BigQuery Billing Export |
+| **Total Cost** | Aggregate cost across all components (LLM, compute, storage, API calls) | Cloud Billing API |
+
+---
+
+## Architecture
+
+### Design Principles
+
+1. **Separation of Concerns**
+   - Logic in hooks (`useAgentData`)
+   - Presentation in components (`views/`, `common/`)
+   - Styling via centralised theme (`theme.js`)
+
+2. **Single Source of Truth**
+   - Data fetched once in container, passed down via props
+   - All mock data centralised in `mockData.js`
+   - Ready to swap for API calls
+
+3. **Scalability**
+   - Add new views by creating a file in `views/` and one switch case
+   - Add new agents by updating data source
+   - Real-time: swap mock imports for WebSocket in `useAgentData.js`
+
+### Data Flow
+
+```
+┌─────────────────────┐
+│   Google Cloud      │
+│  (Agent Engine)     │
+└─────────┬───────────┘
+          │
+          ▼
+┌─────────────────────┐
+│   Backend Service   │  ← Future: Python/Node.js
+│   (Aggregation)     │
+└─────────┬───────────┘
+          │
+          ▼
+┌─────────────────────┐
+│   useAgentData()    │  ← Currently: mockData.js
+│   (React Hook)      │     Future: API calls
+└─────────┬───────────┘
+          │
+          ▼
+┌─────────────────────┐
+│   Dashboard Views   │
+│   (React Components)│
+└─────────────────────┘
+```
 
 ---
 
@@ -166,7 +246,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 3. Add navigation item in `Sidebar.jsx`
 4. Add case in `renderContent()` switch
 
-### Connecting Real-time Data
+### Connecting to Google Cloud
 
 Replace the mock data in `useAgentData.js`:
 
@@ -178,15 +258,22 @@ export const useAgentData = () => {
   const [data, setData] = useState({ loading: true, error: null });
 
   useEffect(() => {
-    // Option 1: WebSocket
-    const socket = new WebSocket('wss://api.agentfactory.ai/stream');
-    socket.onmessage = (event) => {
-      setData({ ...JSON.parse(event.data), loading: false });
+    // Fetch from backend API (which connects to Google Cloud)
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/agent-metrics');
+        const json = await response.json();
+        setData({ ...json, loading: false, error: null });
+      } catch (error) {
+        setData(prev => ({ ...prev, loading: false, error }));
+      }
     };
-    return () => socket.close();
-
-    // Option 2: React Query / SWR for polling
-    // const { data } = useQuery('agents', fetchAgents, { refetchInterval: 5000 });
+    
+    fetchData();
+    
+    // Optional: Set up polling for near-real-time updates
+    const interval = setInterval(fetchData, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   return data;
@@ -222,6 +309,29 @@ export const theme = {
 | Active | Green | `#22c55e` | Healthy status |
 | Warning | Amber | `#F59E0B` | Below target |
 | Error | Red | `#DC2626` | Critical issues |
+
+---
+
+## Roadmap
+
+- [x] Frontend dashboard with mock data
+- [x] Modular component architecture
+- [x] Three metric categories (Performance, Compliance, Costs)
+- [x] Google Cloud integration plan
+- [ ] Backend service implementation
+- [ ] Cloud Monitoring API integration
+- [ ] Cloud Billing API integration
+- [ ] Real-time WebSocket updates
+- [ ] Authentication & authorisation
+
+---
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [README.md](./README.md) | This file - project overview |
+| [backend/plan.md](./backend/plan.md) | Google Agent Engine integration plan |
 
 ---
 
