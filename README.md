@@ -157,6 +157,64 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
+## Deployment
+
+### GitHub Pages (Automated CI/CD)
+
+The project includes a GitHub Actions workflow that automatically builds and deploys the dashboard to GitHub Pages on every push to the `main` branch.
+
+#### Setup Instructions
+
+1. **Enable GitHub Pages in Repository Settings**
+   - Go to your repository on GitHub
+   - Navigate to **Settings** → **Pages**
+   - Under **Source**, select **GitHub Actions**
+
+2. **Configure Base Path (if needed)**
+   
+   If your repository is at `username/RentokilAdmin`, you'll need to set the base path:
+   
+   - Option A: Update `vite.config.js` to set `base: '/RentokilAdmin/'`
+   - Option B: Set environment variable `VITE_BASE_PATH=/RentokilAdmin/` in the workflow
+   - Option C: Use a custom domain (set in GitHub Pages settings) and keep `base: '/'`
+
+3. **Push to Main Branch**
+   ```bash
+   git add .
+   git commit -m "Setup CI/CD pipeline"
+   git push origin main
+   ```
+
+4. **Monitor Deployment**
+   - Go to **Actions** tab in your GitHub repository
+   - Watch the workflow run and deploy
+   - Once complete, your site will be available at:
+     - `https://username.github.io/RentokilAdmin/` (project pages)
+     - Or your custom domain if configured
+
+#### Manual Deployment
+
+You can also manually trigger the deployment:
+- Go to **Actions** → **Deploy to GitHub Pages** → **Run workflow**
+
+#### Workflow Details
+
+The CI/CD pipeline (`.github/workflows/deploy.yml`) performs:
+- ✅ Checks out the repository
+- ✅ Sets up Node.js 18
+- ✅ Installs dependencies (`npm ci`)
+- ✅ Builds the production bundle (`npm run build`)
+- ✅ Deploys to GitHub Pages
+
+#### Custom Domain
+
+To use a custom domain:
+1. Add a `CNAME` file in the `Frontend/public/` directory with your domain
+2. Configure DNS records as per GitHub Pages documentation
+3. Update `vite.config.js` to use `base: '/'`
+
+---
+
 ## Metrics Reference
 
 ### Performance Metrics
