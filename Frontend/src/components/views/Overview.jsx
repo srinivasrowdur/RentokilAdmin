@@ -2,9 +2,16 @@ import React, { useState } from 'react';
 import { theme, getStatusColor } from '../../utils/theme';
 import { CategoryCard } from '../common/CategoryCard';
 
+/**
+ * Overview View
+ * 
+ * Displays a high-level summary of all three metric categories
+ * with clickable cards that navigate to detailed views.
+ */
 export const Overview = ({ data, onNavigate }) => {
   const [hoveredAgent, setHoveredAgent] = useState(null);
-  const { agents } = data;
+  const { agents, summaries } = data;
+  const { performance, compliance, cost } = summaries;
 
   return (
     <>
@@ -28,7 +35,7 @@ export const Overview = ({ data, onNavigate }) => {
         </p>
       </header>
 
-      {/* Category Summary Cards */}
+      {/* Category Summary Cards - Data from summaries */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(3, 1fr)',
@@ -41,10 +48,10 @@ export const Overview = ({ data, onNavigate }) => {
           icon="⚡"
           onClick={() => onNavigate('performance')}
           metrics={[
-            { label: 'Avg Latency', value: '82ms', trend: '-12%', status: 'good' },
-            { label: 'Error Rate', value: '0.8%', trend: '-0.4%', status: 'good' },
-            { label: 'Tool Success', value: '99.2%', trend: '+0.3%', status: 'good' },
-            { label: 'Hallucination', value: '0.4%', trend: '-0.2%', status: 'good' },
+            { label: 'Avg Latency', value: performance.avgLatency.value, trend: performance.avgLatency.change, status: 'good' },
+            { label: 'Error Rate', value: performance.errorRate.value, trend: performance.errorRate.change, status: 'good' },
+            { label: 'Tool Success', value: performance.toolSuccess.value, trend: performance.toolSuccess.change, status: 'good' },
+            { label: 'Hallucination', value: performance.hallucination.value, trend: performance.hallucination.change, status: 'good' },
           ]}
         />
         <CategoryCard
@@ -53,10 +60,10 @@ export const Overview = ({ data, onNavigate }) => {
           icon="🛡"
           onClick={() => onNavigate('compliance')}
           metrics={[
-            { label: 'Privacy', value: '98.5%', status: 'good' },
-            { label: 'Security', value: '94.2%', status: 'warning' },
-            { label: 'Bias Detection', value: '2.1%', status: 'good' },
-            { label: 'Explainability', value: '87.3%', status: 'warning' },
+            { label: 'Privacy', value: `${compliance.privacy.value}%`, status: compliance.privacy.status },
+            { label: 'Security', value: `${compliance.security.value}%`, status: compliance.security.status },
+            { label: 'Bias Detection', value: `${compliance.biasDetection.value}%`, status: compliance.biasDetection.status },
+            { label: 'Explainability', value: `${compliance.explainability.value}%`, status: compliance.explainability.status },
           ]}
         />
         <CategoryCard
@@ -65,10 +72,10 @@ export const Overview = ({ data, onNavigate }) => {
           icon="◈"
           onClick={() => onNavigate('costs')}
           metrics={[
-            { label: 'Total Cost (MTD)', value: '$11,400', trend: '+12%' },
-            { label: 'Token Usage', value: '3.9M', trend: '+8%' },
-            { label: 'Compute', value: '$4,200' },
-            { label: 'Storage', value: '$2,400' },
+            { label: 'Total Cost (MTD)', value: cost.totalCost.value, trend: cost.totalCost.change },
+            { label: 'Token Usage', value: cost.tokenUsage.value, trend: cost.tokenUsage.change },
+            { label: 'Compute', value: cost.computeCost.value },
+            { label: 'Daily Avg', value: cost.dailyAvg.value },
           ]}
         />
       </div>
@@ -205,4 +212,3 @@ export const Overview = ({ data, onNavigate }) => {
     </>
   );
 };
-

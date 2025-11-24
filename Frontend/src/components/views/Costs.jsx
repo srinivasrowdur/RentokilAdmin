@@ -4,8 +4,18 @@ import { theme, getStatusColor } from '../../utils/theme';
 import { MetricCard } from '../common/MetricCard';
 import { ChartTooltip } from '../common/ChartTooltip';
 
+/**
+ * Costs View
+ * 
+ * Displays cost metrics including:
+ * - Summary cards with key cost metrics
+ * - Cost trend chart over time
+ * - Cost breakdown by model (pie chart)
+ * - Per-agent cost breakdown table
+ */
 export const Costs = ({ data }) => {
-  const { costHistory, modelCostBreakdown, agents } = data;
+  const { costHistory, modelCostBreakdown, agents, summaries } = data;
+  const summary = summaries.cost;
   const color = theme.colors.categories.cost;
 
   return (
@@ -44,17 +54,17 @@ export const Costs = ({ data }) => {
         </p>
       </header>
 
-      {/* Cost Stats */}
+      {/* Cost Stats - Data from summaries */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(4, 1fr)',
         gap: '20px',
         marginBottom: '32px',
       }}>
-        <MetricCard label="Total Cost (MTD)" value="$11,400" change="+12% vs last month" trend="up" color={color} />
-        <MetricCard label="Token Usage" value="3.9M" change="+8.3%" trend="up" color={color} subtitle="tokens this month" />
-        <MetricCard label="Compute Cost" value="$4,200" change="+10%" trend="up" color={color} />
-        <MetricCard label="Daily Avg" value="$380" change="+5%" trend="up" color={color} />
+        <MetricCard label="Total Cost (MTD)" value={summary.totalCost.value} change={`${summary.totalCost.change} vs last month`} trend={summary.totalCost.trend} color={color} />
+        <MetricCard label="Token Usage" value={summary.tokenUsage.value} change={summary.tokenUsage.change} trend={summary.tokenUsage.trend} color={color} subtitle={summary.tokenUsage.subtitle} />
+        <MetricCard label="Compute Cost" value={summary.computeCost.value} change={summary.computeCost.change} trend={summary.computeCost.trend} color={color} />
+        <MetricCard label="Daily Avg" value={summary.dailyAvg.value} change={summary.dailyAvg.change} trend={summary.dailyAvg.trend} color={color} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px', marginBottom: '32px' }}>
@@ -218,4 +228,3 @@ export const Costs = ({ data }) => {
     </>
   );
 };
-

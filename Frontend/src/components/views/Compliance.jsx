@@ -2,8 +2,18 @@ import React from 'react';
 import { theme, getStatusColor } from '../../utils/theme';
 import { GaugeChart } from '../common/GaugeChart';
 
+/**
+ * Compliance View
+ * 
+ * Displays compliance metrics including:
+ * - Summary gauges for key compliance areas
+ * - GDPR checklist status
+ * - Security control coverage
+ * - Per-agent compliance breakdown table
+ */
 export const Compliance = ({ data }) => {
-  const { agents } = data;
+  const { agents, summaries } = data;
+  const summary = summaries.compliance;
   const color = theme.colors.categories.compliance;
 
   return (
@@ -42,7 +52,7 @@ export const Compliance = ({ data }) => {
         </p>
       </header>
 
-      {/* Compliance Gauges */}
+      {/* Compliance Gauges - Data from summaries */}
       <div style={{
         background: theme.colors.surface,
         borderRadius: '20px',
@@ -60,14 +70,14 @@ export const Compliance = ({ data }) => {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '40px' }}>
-          <GaugeChart value={98.5} target={99} label="Privacy Compliance" color={color} />
-          <GaugeChart value={94.2} target={95} label="Security Controls" color={color} />
-          <GaugeChart value={2.1} target={5} label="Bias Detection Rate" color={color} inverse />
-          <GaugeChart value={87.3} target={90} label="Explainability" color={color} />
+          <GaugeChart value={summary.privacy.value} target={summary.privacy.target} label="Privacy Compliance" color={color} />
+          <GaugeChart value={summary.security.value} target={summary.security.target} label="Security Controls" color={color} />
+          <GaugeChart value={summary.biasDetection.value} target={summary.biasDetection.target} label="Bias Detection Rate" color={color} inverse={summary.biasDetection.inverse} />
+          <GaugeChart value={summary.explainability.value} target={summary.explainability.target} label="Explainability" color={color} />
         </div>
       </div>
 
-      {/* Compliance Details */}
+      {/* Compliance Details - Data from summaries */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(2, 1fr)',
@@ -85,19 +95,17 @@ export const Compliance = ({ data }) => {
             Privacy Compliance (GDPR)
           </h3>
           <div style={{ display: 'grid', gap: '12px' }}>
-            {[
-              { label: 'Data anonymisation', status: 'Active', color: theme.colors.status.active },
-              { label: 'Consent verification', status: 'Active', color: theme.colors.status.active },
-              { label: 'Right to erasure', status: 'Active', color: theme.colors.status.active },
-              { label: 'Data portability', status: 'Partial', color: theme.colors.status.warning },
-            ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: `${item.color}10`, borderRadius: '8px' }}>
-                <span style={{ fontSize: '13px', color: '#6e6e73' }}>{item.label}</span>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: item.color }}>
-                  {item.color === theme.colors.status.active ? '✓' : '⚠'} {item.status}
-                </span>
-              </div>
-            ))}
+            {summary.gdprChecklist.map((item, i) => {
+              const itemColor = item.isActive ? theme.colors.status.active : theme.colors.status.warning;
+              return (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: `${itemColor}10`, borderRadius: '8px' }}>
+                  <span style={{ fontSize: '13px', color: '#6e6e73' }}>{item.label}</span>
+                  <span style={{ fontSize: '13px', fontWeight: '600', color: itemColor }}>
+                    {item.isActive ? '✓' : '⚠'} {item.status}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -112,19 +120,17 @@ export const Compliance = ({ data }) => {
             Security Control Coverage
           </h3>
           <div style={{ display: 'grid', gap: '12px' }}>
-            {[
-              { label: 'Input validation', status: '100%', color: theme.colors.status.active },
-              { label: 'Output filtering', status: '98%', color: theme.colors.status.active },
-              { label: 'Prompt injection defence', status: '89%', color: theme.colors.status.warning },
-              { label: 'Rate limiting', status: '90%', color: theme.colors.status.warning },
-            ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: `${item.color}10`, borderRadius: '8px' }}>
-                <span style={{ fontSize: '13px', color: '#6e6e73' }}>{item.label}</span>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: item.color }}>
-                  {item.color === theme.colors.status.active ? '✓' : '⚠'} {item.status}
-                </span>
-              </div>
-            ))}
+            {summary.securityControls.map((item, i) => {
+              const itemColor = item.isActive ? theme.colors.status.active : theme.colors.status.warning;
+              return (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: `${itemColor}10`, borderRadius: '8px' }}>
+                  <span style={{ fontSize: '13px', color: '#6e6e73' }}>{item.label}</span>
+                  <span style={{ fontSize: '13px', fontWeight: '600', color: itemColor }}>
+                    {item.isActive ? '✓' : '⚠'} {item.status}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -178,4 +184,3 @@ export const Compliance = ({ data }) => {
     </>
   );
 };
-

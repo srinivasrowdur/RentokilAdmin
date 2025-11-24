@@ -4,9 +4,18 @@ import { theme, getStatusColor } from '../../utils/theme';
 import { MetricCard } from '../common/MetricCard';
 import { ChartTooltip } from '../common/ChartTooltip';
 
+/**
+ * Performance View
+ * 
+ * Displays detailed performance metrics including:
+ * - Summary cards with key metrics
+ * - Latency trend chart
+ * - Per-agent performance breakdown table
+ */
 export const Performance = ({ data }) => {
   const [selectedTimeRange, setSelectedTimeRange] = useState('6M');
-  const { performanceHistory, agents } = data;
+  const { performanceHistory, agents, summaries } = data;
+  const summary = summaries.performance;
   const color = theme.colors.categories.performance;
 
   return (
@@ -45,19 +54,19 @@ export const Performance = ({ data }) => {
         </p>
       </header>
 
-      {/* Performance Stats */}
+      {/* Performance Stats - Data from summaries */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(6, 1fr)',
         gap: '16px',
         marginBottom: '32px',
       }}>
-        <MetricCard label="Avg Latency" value="82ms" change="-12% vs last month" trend="down" color={color} />
-        <MetricCard label="Error Rate" value="0.8%" change="-0.4%" trend="down" color={color} />
-        <MetricCard label="Tool Success" value="99.2%" change="+0.3%" trend="up" color={color} />
-        <MetricCard label="Escalation Rate" value="3.1%" change="-0.8%" trend="down" color={color} />
-        <MetricCard label="Output Accuracy" value="96.6%" change="+1.2%" trend="up" color={color} />
-        <MetricCard label="Hallucination" value="0.4%" change="-0.2%" trend="down" color={color} />
+        <MetricCard label="Avg Latency" value={summary.avgLatency.value} change={`${summary.avgLatency.change} vs last month`} trend={summary.avgLatency.trend} color={color} />
+        <MetricCard label="Error Rate" value={summary.errorRate.value} change={summary.errorRate.change} trend={summary.errorRate.trend} color={color} />
+        <MetricCard label="Tool Success" value={summary.toolSuccess.value} change={summary.toolSuccess.change} trend={summary.toolSuccess.trend} color={color} />
+        <MetricCard label="Escalation Rate" value={summary.escalationRate.value} change={summary.escalationRate.change} trend={summary.escalationRate.trend} color={color} />
+        <MetricCard label="Output Accuracy" value={summary.outputAccuracy.value} change={summary.outputAccuracy.change} trend={summary.outputAccuracy.trend} color={color} />
+        <MetricCard label="Hallucination" value={summary.hallucination.value} change={summary.hallucination.change} trend={summary.hallucination.trend} color={color} />
       </div>
 
       {/* Latency Chart */}
@@ -169,4 +178,3 @@ export const Performance = ({ data }) => {
     </>
   );
 };
-
